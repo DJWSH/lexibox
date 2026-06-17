@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LexiBox — Vocabulary for IELTS, TOEFL, GRE & More</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+/* ── Reset & Tokens ──────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ink: #1a1a2e;
+  --ink2: #4a4a6a;
+  --ink3: #8888aa;
+  --paper: #f7f6f2;
+  --card: #ffffff;
+  --border: rgba(26,26,46,0.12);
+  --border2: rgba(26,26,46,0.22);
+  --accent: #5048e5;
+  --accent-light: #ede9fe;
+  --accent-dark: #3730a3;
+  --green: #059669;
+  --green-light: #d1fae5;
+  --red: #dc2626;
+  --red-light: #fee2e2;
+  --amber: #d97706;
+  --amber-light: #fef3c7;
+  --box1: #dbeafe; --box1b: #1d4ed8;
+  --box2: #e0e7ff; --box2b: #4338ca;
+  --box3: #f3e8ff; --box3b: #7c3aed;
+  --box4: #fce7f3; --box4b: #be185d;
+  --box5: #d1fae5; --box5b: #059669;
+  --r-sm: 8px; --r-md: 12px; --r-lg: 18px; --r-xl: 24px;
+  --shadow: 0 2px 12px rgba(26,26,46,0.08);
+  --shadow-lg: 0 8px 40px rgba(26,26,46,0.14);
+  font-size: 16px;
+}
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ── Typography ──────────────────────────────────────── */
+.serif { font-family: 'DM Serif Display', serif; }
+h1, h2 { font-family: 'DM Serif Display', serif; font-weight: 400; }
+
+/* ── Layout ──────────────────────────────────────────── */
+.app { display: flex; flex-direction: column; min-height: 100vh; }
+.topbar {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.logo { display: flex; align-items: center; gap: 8px; }
+.logo-mark {
+  width: 32px; height: 32px;
+  background: var(--accent);
+  border-radius: var(--r-sm);
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-size: 15px; font-weight: 600;
+}
+.logo-text { font-family: 'DM Serif Display', serif; font-size: 19px; color: var(--ink); }
+.nav { display: flex; gap: 4px; }
+.nav-btn {
+  padding: 6px 14px; border: none; background: transparent;
+  font-family: 'DM Sans', sans-serif; font-size: 14px;
+  color: var(--ink2); cursor: pointer; border-radius: var(--r-sm);
+  transition: all .15s;
+}
+.nav-btn:hover { background: var(--paper); color: var(--ink); }
+.nav-btn.active { background: var(--accent-light); color: var(--accent); font-weight: 500; }
+
+.main { flex: 1; padding: 32px 24px; max-width: 900px; margin: 0 auto; width: 100%; }
+
+/* ── Views ───────────────────────────────────────────── */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ── Landing / Hero ──────────────────────────────────── */
+.hero-section { text-align: center; padding: 48px 0 40px; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--accent-light); color: var(--accent);
+  font-size: 12px; font-weight: 500; padding: 4px 12px;
+  border-radius: 20px; margin-bottom: 20px;
+  letter-spacing: 0.04em;
+}
+.hero-section h1 { font-size: clamp(36px, 6vw, 58px); line-height: 1.1; margin-bottom: 16px; }
+.hero-section h1 em { color: var(--accent); font-style: italic; }
+.hero-section p { font-size: 17px; color: var(--ink2); max-width: 500px; margin: 0 auto 32px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 24px; border-radius: var(--r-md);
+  font-family: 'DM Sans', sans-serif; font-size: 15px;
+  font-weight: 500; cursor: pointer; border: none;
+  transition: all .15s; text-decoration: none;
+}
+.btn-primary { background: var(--accent); color: white; }
+.btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: var(--shadow); }
+.btn-ghost { background: transparent; color: var(--ink2); border: 1px solid var(--border2); }
+.btn-ghost:hover { background: var(--card); }
+.hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+.exam-chips { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-top: 32px; }
+.exam-chip {
+  padding: 6px 14px; border-radius: 20px;
+  background: var(--card); border: 1px solid var(--border);
+  font-size: 13px; color: var(--ink2); cursor: pointer;
+  transition: all .15s;
+}
+.exam-chip:hover, .exam-chip.active {
+  background: var(--accent-light); border-color: var(--accent);
+  color: var(--accent); font-weight: 500;
+}
+
+/* How it works */
+.how-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px; margin: 40px 0;
+}
+.how-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 24px;
+}
+.how-num {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--accent-light); color: var(--accent);
+  font-weight: 600; font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px;
+}
+.how-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.how-card p { font-size: 13px; color: var(--ink2); line-height: 1.5; }
+
+/* ── Study View ──────────────────────────────────────── */
+.study-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+}
+.study-title { font-size: 22px; }
+
+/* Leitner Boxes */
+.boxes-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px; margin-bottom: 28px;
+}
+.lbox {
+  border-radius: var(--r-md); padding: 12px 10px;
+  text-align: center; cursor: default;
+  border: 1.5px solid transparent;
+  transition: all .2s;
+}
+.lbox.active { border-color: var(--accent); transform: scale(1.04); box-shadow: var(--shadow); }
+.lbox-label { font-size: 11px; font-weight: 600; letter-spacing: 0.05em; color: var(--ink3); margin-bottom: 4px; }
+.lbox-count { font-size: 22px; font-weight: 600; }
+.lbox-name { font-size: 11px; color: var(--ink2); margin-top: 2px; }
+.lbox:nth-child(1) { background: var(--box1); }
+.lbox:nth-child(1) .lbox-count { color: var(--box1b); }
+.lbox:nth-child(2) { background: var(--box2); }
+.lbox:nth-child(2) .lbox-count { color: var(--box2b); }
+.lbox:nth-child(3) { background: var(--box3); }
+.lbox:nth-child(3) .lbox-count { color: var(--box3b); }
+.lbox:nth-child(4) { background: var(--box4); }
+.lbox:nth-child(4) .lbox-count { color: var(--box4b); }
+.lbox:nth-child(5) { background: var(--box5); }
+.lbox:nth-child(5) .lbox-count { color: var(--box5b); }
+
+/* Flash Card */
+.card-arena { perspective: 1000px; margin-bottom: 24px; }
+.flash-card {
+  width: 100%; min-height: 280px;
+  position: relative; cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform .5s cubic-bezier(.4,0,.2,1);
+}
+.flash-card.flipped { transform: rotateY(180deg); }
+.card-face {
+  position: absolute; inset: 0;
+  backface-visibility: hidden;
+  background: var(--card);
+  border-radius: var(--r-xl);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 40px;
+  text-align: center;
+}
+.card-face.back { transform: rotateY(180deg); }
+.card-exam-badge {
+  position: absolute; top: 18px; left: 20px;
+  font-size: 11px; font-weight: 600; letter-spacing: 0.08em;
+  color: var(--accent); background: var(--accent-light);
+  padding: 3px 10px; border-radius: 20px;
+}
+.card-box-badge {
+  position: absolute; top: 18px; right: 20px;
+  font-size: 11px; font-weight: 500;
+  color: var(--ink3);
+}
+.card-word {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(32px, 5vw, 48px);
+  color: var(--ink); margin-bottom: 8px;
+  line-height: 1.1;
+}
+.card-pos {
+  font-size: 13px; color: var(--ink3); font-style: italic; margin-bottom: 4px;
+}
+.card-phonetic { font-size: 14px; color: var(--ink3); margin-bottom: 4px; }
+.card-tap-hint {
+  margin-top: 20px; font-size: 13px; color: var(--ink3);
+  display: flex; align-items: center; gap: 4px;
+}
+
+.card-def {
+  font-size: 17px; color: var(--ink); margin-bottom: 16px; line-height: 1.5;
+}
+.card-example {
+  font-size: 14px; color: var(--ink2); font-style: italic;
+  background: var(--paper); padding: 12px 16px;
+  border-radius: var(--r-md); width: 100%;
+  border-left: 3px solid var(--accent); text-align: left;
+  margin-bottom: 8px;
+}
+.card-mnemonic {
+  font-size: 13px; color: var(--ink3);
+  width: 100%; text-align: left; margin-top: 8px;
+}
+
+/* Answer buttons */
+.answer-row {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; margin-top: 4px;
+}
+.answer-btn {
+  padding: 14px; border-radius: var(--r-md);
+  border: none; font-family: 'DM Sans', sans-serif;
+  font-size: 15px; font-weight: 500; cursor: pointer;
+  transition: all .15s; display: flex; align-items: center;
+  justify-content: center; gap: 8px;
+}
+.answer-btn:disabled { opacity: 0.4; cursor: default; }
+.btn-wrong { background: var(--red-light); color: var(--red); }
+.btn-wrong:not(:disabled):hover { background: var(--red); color: white; transform: translateY(-1px); }
+.btn-correct { background: var(--green-light); color: var(--green); }
+.btn-correct:not(:disabled):hover { background: var(--green); color: white; transform: translateY(-1px); }
+
+/* Progress bar */
+.progress-bar-wrap {
+  background: var(--border); border-radius: 4px;
+  height: 4px; margin-bottom: 12px; overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%; background: var(--accent);
+  border-radius: 4px; transition: width .4s ease;
+}
+.progress-label { font-size: 13px; color: var(--ink3); margin-bottom: 20px; }
+
+/* Empty state */
+.empty-state {
+  text-align: center; padding: 60px 24px;
+  background: var(--card); border-radius: var(--r-xl);
+  border: 1px solid var(--border);
+}
+.empty-icon { font-size: 52px; margin-bottom: 16px; }
+.empty-state h2 { font-size: 22px; margin-bottom: 8px; }
+.empty-state p { color: var(--ink2); margin-bottom: 24px; }
+
+/* ── Progress View ───────────────────────────────────── */
+.stats-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px; margin-bottom: 32px;
+}
+.stat-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r-lg); padding: 20px;
+}
+.stat-label { font-size: 12px; color: var(--ink3); margin-bottom: 4px; font-weight: 500; letter-spacing: 0.04em; }
+.stat-val { font-size: 28px; font-weight: 600; color: var(--ink); }
+.stat-sub { font-size: 12px; color: var(--ink2); margin-top: 2px; }
+
+/* Word browser */
+.word-list { display: grid; gap: 8px; }
+.word-row {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: var(--r-md); padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.word-row-word { font-weight: 500; min-width: 120px; }
+.word-row-def { color: var(--ink2); font-size: 14px; flex: 1; }
+.word-row-box {
+  font-size: 11px; font-weight: 600; padding: 3px 10px;
+  border-radius: 20px; white-space: nowrap;
+}
+
+/* ── Exam Selector ───────────────────────────────────── */
+.exam-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+.exam-card {
+  background: var(--card); border: 1.5px solid var(--border);
+  border-radius: var(--r-lg); padding: 20px;
+  cursor: pointer; transition: all .2s; text-align: center;
+}
+.exam-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow); }
+.exam-card.selected { border-color: var(--accent); background: var(--accent-light); }
+.exam-icon { font-size: 30px; margin-bottom: 10px; }
+.exam-name { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+.exam-desc { font-size: 12px; color: var(--ink2); }
+.exam-count { font-size: 11px; color: var(--accent); font-weight: 500; margin-top: 6px; }
+
+/* ── Toast ───────────────────────────────────────────── */
+#toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+  background: var(--ink); color: white; padding: 10px 20px;
+  border-radius: var(--r-md); font-size: 14px;
+  transition: transform .3s ease; z-index: 999;
+  pointer-events: none;
+}
+#toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 600px) {
+  .topbar { padding: 0 16px; }
+  .main { padding: 20px 16px; }
+  .boxes-row { grid-template-columns: repeat(5, 1fr); gap: 4px; }
+  .lbox { padding: 8px 4px; }
+  .lbox-count { font-size: 18px; }
+  .nav-btn span { display: none; }
+  .answer-row { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="logo">
+    <div class="logo-mark">L</div>
+    <span class="logo-text">LexiBox</span>
+  </div>
+  <nav class="nav">
+    <button class="nav-btn active" onclick="showView('home')" id="tab-home">
+      🏠 <span>Home</span>
+    </button>
+    <button class="nav-btn" onclick="showView('study')" id="tab-study">
+      📚 <span>Study</span>
+    </button>
+    <button class="nav-btn" onclick="showView('progress')" id="tab-progress">
+      📊 <span>Progress</span>
+    </button>
+  </nav>
+</header>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- HOME VIEW -->
+  <div class="view active" id="view-home">
+    <div class="hero-section">
+      <div class="hero-eyebrow">🧠 Science-backed spaced repetition</div>
+      <h1>Master vocabulary for any <em>standard test</em></h1>
+      <p>The Leitner box system, the most proven method for vocabulary retention — now tuned for IELTS, TOEFL, GRE, GMAT, and more.</p>
+      <div class="hero-btns">
+        <button class="btn btn-primary" onclick="showView('study')">Start studying free →</button>
+        <button class="btn btn-ghost" onclick="showView('progress')">See my progress</button>
+      </div>
+      <div class="exam-chips">
+        <span class="exam-chip">IELTS</span>
+        <span class="exam-chip">TOEFL</span>
+        <span class="exam-chip">GRE</span>
+        <span class="exam-chip">GMAT</span>
+        <span class="exam-chip">TOLIMO</span>
+        <span class="exam-chip">PET</span>
+      </div>
+    </div>
+
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-num">1</div>
+        <h3>Pick your exam</h3>
+        <p>Choose from IELTS, TOEFL, GRE, GMAT, TOLIMO, or PET. Each has a curated word list.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">2</div>
+        <h3>Flip the card</h3>
+        <p>See the word first, guess the meaning, then flip to reveal definition and example.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">3</div>
+        <h3>Rate yourself</h3>
+        <p>Knew it? The word moves up a box. Didn't? Back to Box 1. Review spacing adapts automatically.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">4</div>
+        <h3>Reach Box 5</h3>
+        <p>Words in Box 5 are mastered. They review less often so you focus on what needs work.</p>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top: 8px;">
+      <button class="btn btn-primary" style="font-size:16px; padding:14px 32px;" onclick="showView('study')">
+        Open my study box →
+      </button>
+    </div>
+  </div>
+
+  <!-- STUDY VIEW -->
+  <div class="view" id="view-study">
+    <div class="study-header">
+      <h1 class="study-title serif">Study Session</h1>
+      <select id="exam-select" onchange="changeExam()" style="padding:8px 14px; border-radius:var(--r-md); border:1px solid var(--border2); background:var(--card); font-family:'DM Sans',sans-serif; font-size:14px; cursor:pointer; color:var(--ink);">
+        <option value="ielts">IELTS Academic</option>
+        <option value="toefl">TOEFL iBT</option>
+        <option value="gre">GRE Verbal</option>
+        <option value="gmat">GMAT Verbal</option>
+        <option value="tolimo">TOLIMO</option>
+        <option value="pet">Cambridge PET</option>
+      </select>
+    </div>
+
+    <!-- Leitner boxes -->
+    <div class="boxes-row" id="boxes-row">
+      <!-- rendered by JS -->
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-fill"></div></div>
+    <div class="progress-label" id="progress-label"></div>
+
+    <!-- Card -->
+    <div id="card-area"></div>
+  </div>
+
+  <!-- PROGRESS VIEW -->
+  <div class="view" id="view-progress">
+    <h1 class="serif" style="margin-bottom:24px">My Progress</h1>
+    <div class="stats-grid" id="stats-grid"></div>
+
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; flex-wrap:wrap; gap:8px;">
+      <h2 style="font-size:18px">All words</h2>
+      <select id="filter-exam" onchange="renderWordList()" style="padding:6px 12px; border-radius:var(--r-md); border:1px solid var(--border2); background:var(--card); font-family:'DM Sans',sans-serif; font-size:13px; cursor:pointer; color:var(--ink);">
+        <option value="">All exams</option>
+        <option value="ielts">IELTS</option>
+        <option value="toefl">TOEFL</option>
+        <option value="gre">GRE</option>
+        <option value="gmat">GMAT</option>
+        <option value="tolimo">TOLIMO</option>
+        <option value="pet">PET</option>
+      </select>
+    </div>
+    <div class="word-list" id="word-list"></div>
+  </div>
+
+</main>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  WORD DATABASE
+// ═══════════════════════════════════════════════════════
+const WORDS = {
+  ielts: [
+    { word:"Albeit", pos:"conj", phonetic:"/ɔːlˈbiːɪt/", def:"Although; even though.", example:"The plan was good, albeit risky.", mnemonic:"All-be-it = even though it all is..." },
+    { word:"Ambiguous", pos:"adj", phonetic:"/æmˈbɪɡjuəs/", def:"Open to more than one interpretation; not clear.", example:"The treaty contained some ambiguous clauses.", mnemonic:"Ambi = both sides; both interpretations possible." },
+    { word:"Coherent", pos:"adj", phonetic:"/kəʊˈhɪərənt/", def:"Logical and consistent; clearly expressed.", example:"She gave a coherent account of the events.", mnemonic:"CO-here-nt: things stick together here." },
+    { word:"Compel", pos:"verb", phonetic:"/kəmˈpel/", def:"Force or oblige someone to do something.", example:"The evidence compelled the jury to convict.", mnemonic:"Com-PEL: pelt someone into action." },
+    { word:"Constitute", pos:"verb", phonetic:"/ˈkɒnstɪtjuːt/", def:"Be a part of a whole; to make up or form.", example:"Women constitute 50% of the workforce.", mnemonic:"Con-STIT-ute: stitch together to form." },
+    { word:"Deplete", pos:"verb", phonetic:"/dɪˈpliːt/", def:"Use up the supply or resources of.", example:"Overfishing has depleted fish stocks.", mnemonic:"DE-plete: take away plenty until empty." },
+    { word:"Elaborate", pos:"verb/adj", phonetic:"/ɪˈlæbərət/", def:"To develop or present in further detail.", example:"Could you elaborate on that point?", mnemonic:"E-labor-ate: to labor out more detail." },
+    { word:"Fluctuate", pos:"verb", phonetic:"/ˈflʌktʃueɪt/", def:"Rise and fall irregularly in number or amount.", example:"Temperatures fluctuate widely in the desert.", mnemonic:"FLUX + tuate: flux means change." },
+    { word:"Inevitable", pos:"adj", phonetic:"/ɪnˈevɪtəbl/", def:"Certain to happen; unavoidable.", example:"Conflict seemed inevitable.", mnemonic:"In-EVIT-able: cannot be evited (avoided)." },
+    { word:"Mitigate", pos:"verb", phonetic:"/ˈmɪtɪɡeɪt/", def:"Make less severe, serious, or painful.", example:"Trees help mitigate the effects of flooding.", mnemonic:"MITI-gate: open a gate to let some bad out." },
+  ],
+  toefl: [
+    { word:"Phenomenon", pos:"noun", phonetic:"/fɪˈnɒmɪnən/", def:"A fact or situation observed to exist or happen.", example:"The northern lights are a natural phenomenon.", mnemonic:"PHENOmenal things are phenomena." },
+    { word:"Subsequent", pos:"adj", phonetic:"/ˈsʌbsɪkwənt/", def:"Coming after something in time; following.", example:"Subsequent studies confirmed the findings.", mnemonic:"Sub-SEQU-ent: sequence comes after." },
+    { word:"Substantial", pos:"adj", phonetic:"/səbˈstænʃəl/", def:"Of considerable importance, size, or worth.", example:"There has been substantial progress.", mnemonic:"Sub-STANCE-tial: has real substance." },
+    { word:"Undermine", pos:"verb", phonetic:"/ˌʌndəˈmaɪn/", def:"Erode the base or foundation of; weaken.", example:"Corruption undermines trust in government.", mnemonic:"Mine under something to weaken it." },
+    { word:"Versatile", pos:"adj", phonetic:"/ˈvɜːsətaɪl/", def:"Able to adapt to many different functions.", example:"Python is a versatile programming language.", mnemonic:"VERS-atile: many verses/versions of itself." },
+    { word:"Aggregate", pos:"noun/verb", phonetic:"/ˈæɡrɪɡɪt/", def:"A whole formed by combining several elements.", example:"The aggregate score determines the winner.", mnemonic:"AGGRE-gate: gather through the gate into one." },
+    { word:"Conducive", pos:"adj", phonetic:"/kənˈdjuːsɪv/", def:"Making a certain situation or outcome likely.", example:"A quiet room is conducive to studying.", mnemonic:"Con-DUCE-ive: leads (induces) to a result." },
+    { word:"Inherent", pos:"adj", phonetic:"/ɪnˈhɪərənt/", def:"Existing as a natural or permanent quality.", example:"There are inherent risks in any business.", mnemonic:"IN-HERE-nt: already in here, built-in." },
+    { word:"Persist", pos:"verb", phonetic:"/pəˈsɪst/", def:"Continue firmly in a course of action.", example:"The drought persisted for three years.", mnemonic:"Per-SIST: sister who never gives up." },
+    { word:"Proportion", pos:"noun", phonetic:"/prəˈpɔːʃn/", def:"A part, share, or relationship between things.", example:"A large proportion of students passed.", mnemonic:"PRO-PORTION: your portion of the pro share." },
+  ],
+  gre: [
+    { word:"Abstruse", pos:"adj", phonetic:"/æbˈstruːs/", def:"Difficult to understand; obscure.", example:"The professor's lecture was abstruse.", mnemonic:"Ab-STRUSE: truth is strewn where none can find it." },
+    { word:"Acrimony", pos:"noun", phonetic:"/ˈækrɪməni/", def:"Bitterness or ill feeling, especially in speech.", example:"The divorce was filled with acrimony.", mnemonic:"ACRI-mony: acrid (bitter) money fight." },
+    { word:"Ameliorate", pos:"verb", phonetic:"/əˈmiːliəreɪt/", def:"Make something bad or unsatisfactory better.", example:"Reforms ameliorated working conditions.", mnemonic:"A-MELIO-rate: make it better (French meilleur)." },
+    { word:"Cacophony", pos:"noun", phonetic:"/kəˈkɒfəni/", def:"A harsh, discordant mixture of sounds.", example:"The city streets created a cacophony.", mnemonic:"CACO = bad, PHONY = sound: bad sounds." },
+    { word:"Equivocate", pos:"verb", phonetic:"/ɪˈkwɪvəkeɪt/", def:"Use ambiguous language to conceal the truth.", example:"Politicians often equivocate on hard issues.", mnemonic:"EQUI-VOC-ate: equal voices pointing both ways." },
+    { word:"Garrulous", pos:"adj", phonetic:"/ˈɡærələs/", def:"Excessively talkative, especially on trivial matters.", example:"The garrulous neighbor talked for hours.", mnemonic:"GARR-ulous: gargle words non-stop." },
+    { word:"Impecunious", pos:"adj", phonetic:"/ˌɪmpɪˈkjuːniəs/", def:"Having little or no money; poor.", example:"The impecunious student ate only ramen.", mnemonic:"Im-PECUNI-ous: no pecuniary (money) resources." },
+    { word:"Loquacious", pos:"adj", phonetic:"/ləˈkweɪʃəs/", def:"Tending to talk a great deal; talkative.", example:"Her loquacious nature made her popular.", mnemonic:"LOQU-acious: loqui (Latin: to speak) too much." },
+    { word:"Perfidious", pos:"adj", phonetic:"/pəˈfɪdiəs/", def:"Deceitful and untrustworthy; treacherous.", example:"His perfidious betrayal shocked everyone.", mnemonic:"Per-FID-ious: breaks your FAITH (fido = faith)." },
+    { word:"Recondite", pos:"adj", phonetic:"/ˈrekəndaɪt/", def:"Not known by many people; obscure.", example:"The scholar's recondite knowledge impressed all.", mnemonic:"Re-CONDIT-e: hidden (conditioned away) from view." },
+  ],
+  gmat: [
+    { word:"Cogent", pos:"adj", phonetic:"/ˈkəʊdʒənt/", def:"Clear, logical, and convincing.", example:"She made a cogent argument for reform.", mnemonic:"CO-GENT: co-agent that convinces you." },
+    { word:"Concur", pos:"verb", phonetic:"/kənˈkɜː/", def:"Be of the same opinion; agree.", example:"The board concurred with the proposal.", mnemonic:"Con-CUR: run (current) together in agreement." },
+    { word:"Discrepancy", pos:"noun", phonetic:"/dɪˈskrepənsi/", def:"A lack of compatibility between facts.", example:"There's a discrepancy in the accounts.", mnemonic:"Dis-CREP-ancy: crept apart, no longer matching." },
+    { word:"Efficacious", pos:"adj", phonetic:"/ˌefɪˈkeɪʃəs/", def:"Successful in producing a desired result.", example:"The drug proved efficacious in trials.", mnemonic:"EFF-IC-acious: efficient + effective combined." },
+    { word:"Extrapolate", pos:"verb", phonetic:"/ɪkˈstræpəleɪt/", def:"Extend conclusions to an unknown situation.", example:"We can extrapolate future trends from data.", mnemonic:"EXTRA-polate: go extra beyond what you know." },
+    { word:"Nominal", pos:"adj", phonetic:"/ˈnɒmɪnəl/", def:"Existing in name only; very small.", example:"The fee is nominal — just $5.", mnemonic:"NOMIN-al: only in name (nomen = name)." },
+    { word:"Pragmatic", pos:"adj", phonetic:"/præɡˈmætɪk/", def:"Dealing with things practically rather than theoretically.", example:"We need a pragmatic solution.", mnemonic:"PRAGMA-tic: take action, not theory." },
+    { word:"Rectify", pos:"verb", phonetic:"/ˈrektɪfaɪ/", def:"Put right; correct.", example:"Steps were taken to rectify the error.", mnemonic:"RECT-ify: make it RECT (right/straight)." },
+    { word:"Tenuous", pos:"adj", phonetic:"/ˈtenjuəs/", def:"Very weak or slight; not firmly based.", example:"The connection between the events is tenuous.", mnemonic:"TEN-uous: thin as a ten-thread." },
+    { word:"Viable", pos:"adj", phonetic:"/ˈvaɪəbl/", def:"Capable of working successfully; feasible.", example:"Is this a viable business model?", mnemonic:"VIA-ble: there's a way (via) it can work." },
+  ],
+  tolimo: [
+    { word:"Commence", pos:"verb", phonetic:"/kəˈmens/", def:"Begin; start.", example:"The ceremony will commence at noon.", mnemonic:"Com-MENCE: menstarte (Latin: begin)." },
+    { word:"Consent", pos:"noun/verb", phonetic:"/kənˈsent/", def:"Permission for something to happen or agreement.", example:"You need parental consent to participate.", mnemonic:"Con-SENT: sent agreement together." },
+    { word:"Feasible", pos:"adj", phonetic:"/ˈfiːzɪbl/", def:"Possible and practical to do easily or conveniently.", example:"Is it feasible to finish by Friday?", mnemonic:"FEAS-ible: do-able at a feast pace." },
+    { word:"Incentive", pos:"noun", phonetic:"/ɪnˈsentɪv/", def:"A thing that motivates or encourages someone.", example:"Bonuses act as an incentive to work harder.", mnemonic:"IN-CENT-ive: a cent (coin) that pulls you in." },
+    { word:"Perception", pos:"noun", phonetic:"/pəˈsepʃn/", def:"The way someone understands or interprets something.", example:"Public perception of the brand improved.", mnemonic:"Per-CEPT-ion: what you capture (cept) through senses." },
+    { word:"Preliminary", pos:"adj", phonetic:"/prɪˈlɪmɪnəri/", def:"Preceding or leading up to the main event.", example:"Preliminary results look positive.", mnemonic:"Pre-LIMIN-ary: before the limit/finish line." },
+    { word:"Reluctant", pos:"adj", phonetic:"/rɪˈlʌktənt/", def:"Unwilling and hesitant; disinclined.", example:"She was reluctant to accept help.", mnemonic:"Re-LUCT-ant: struggles (luct) to move forward." },
+    { word:"Supplement", pos:"verb/noun", phonetic:"/ˈsʌplɪment/", def:"Add an extra element to enhance something.", example:"He supplements his income by tutoring.", mnemonic:"Sup-PLY-ment: supply more on top." },
+    { word:"Unanimous", pos:"adj", phonetic:"/juˈnænɪməs/", def:"Fully in agreement; without opposition.", example:"The decision was unanimous.", mnemonic:"UNI-ANIM-ous: one (uni) spirit (animus) together." },
+    { word:"Vital", pos:"adj", phonetic:"/ˈvaɪtl/", def:"Absolutely necessary or important; essential.", example:"Hydration is vital during exercise.", mnemonic:"VITAL = VITA (life): necessary for life." },
+  ],
+  pet: [
+    { word:"Adequate", pos:"adj", phonetic:"/ˈædɪkwət/", def:"Satisfactory or acceptable in quality or quantity.", example:"The lighting was adequate for reading.", mnemonic:"ADEQ-uate: equal to what is needed." },
+    { word:"Approximately", pos:"adv", phonetic:"/əˈprɒksɪmətli/", def:"Used to show that something is almost but not exactly right.", example:"It takes approximately two hours.", mnemonic:"APPROX-imately: getting close (proximate)." },
+    { word:"Benefit", pos:"noun/verb", phonetic:"/ˈbenɪfɪt/", def:"An advantage or profit gained from something.", example:"Exercise has many health benefits.", mnemonic:"BENE-fit: good (bene) fit for you." },
+    { word:"Challenge", pos:"noun/verb", phonetic:"/ˈtʃælɪndʒ/", def:"A task or situation that tests someone's abilities.", example:"Learning a language is a rewarding challenge.", mnemonic:"CHALL-enge: call (challenge) forth your strength." },
+    { word:"Demonstrate", pos:"verb", phonetic:"/ˈdemənstreɪt/", def:"Clearly show the existence or truth of something.", example:"She demonstrated how the app works.", mnemonic:"De-MON-strate: show the monster (proof)." },
+    { word:"Efficient", pos:"adj", phonetic:"/ɪˈfɪʃnt/", def:"Achieving maximum productivity with minimum effort.", example:"Electric cars are more efficient than petrol.", mnemonic:"EFF-icient: puts in maximum effect." },
+    { word:"Fluent", pos:"adj", phonetic:"/ˈfluːənt/", def:"Speaking a language easily and accurately.", example:"She is fluent in three languages.", mnemonic:"FLU-ent: words flow (flow-ent) easily." },
+    { word:"Generous", pos:"adj", phonetic:"/ˈdʒenərəs/", def:"Showing a readiness to give more than expected.", example:"He was generous with his time.", mnemonic:"GEN-erous: generates giving for others." },
+    { word:"Hesitate", pos:"verb", phonetic:"/ˈhezɪteɪt/", def:"Pause before saying or doing something.", example:"Don't hesitate to call if you need help.", mnemonic:"HESIT-ate: ate the pause before acting." },
+    { word:"Improve", pos:"verb", phonetic:"/ɪmˈpruːv/", def:"Make or become better.", example:"Regular practice helps you improve quickly.", mnemonic:"Im-PROVE: prove you're better than before." },
+  ],
+};
+
+// ═══════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════
+let state = loadState();
+
+function defaultState() {
+  const progress = {};
+  Object.keys(WORDS).forEach(exam => {
+    WORDS[exam].forEach((w, i) => {
+      progress[`${exam}_${i}`] = { box: 1, nextReview: Date.now(), correct: 0, wrong: 0 };
+    });
+  });
+  return { progress, currentExam: 'ielts', totalSessions: 0, streak: 0, lastStudied: null };
+}
+
+function loadState() {
+  try {
+    const s = localStorage.getItem('lexibox_state');
+    if (s) {
+      const parsed = JSON.parse(s);
+      // Ensure all words exist
+      const def = defaultState();
+      Object.keys(def.progress).forEach(k => {
+        if (!parsed.progress[k]) parsed.progress[k] = def.progress[k];
+      });
+      return parsed;
+    }
+  } catch(e) {}
+  return defaultState();
+}
+
+function saveState() {
+  try { localStorage.setItem('lexibox_state', JSON.stringify(state)); } catch(e) {}
+}
+
+// ═══════════════════════════════════════════════════════
+//  LEITNER ALGORITHM
+// ═══════════════════════════════════════════════════════
+const BOX_INTERVALS = [0, 0, 1, 3, 7, 14]; // days between reviews per box
+
+function getDueWords(exam) {
+  const now = Date.now();
+  return WORDS[exam]
+    .map((w, i) => ({ word: w, key: `${exam}_${i}`, ...state.progress[`${exam}_${i}`] }))
+    .filter(w => w.box < 5 ? w.nextReview <= now : w.nextReview <= now)
+    .sort((a, b) => a.box - b.box || a.nextReview - b.nextReview);
+}
+
+function answerCard(key, correct) {
+  const p = state.progress[key];
+  if (correct) {
+    p.correct++;
+    p.box = Math.min(5, p.box + 1);
+  } else {
+    p.wrong++;
+    p.box = 1;
+  }
+  const days = BOX_INTERVALS[p.box] || 1;
+  p.nextReview = Date.now() + days * 86400000;
+  state.lastStudied = Date.now();
+  saveState();
+}
+
+// ═══════════════════════════════════════════════════════
+//  STUDY SESSION
+// ═══════════════════════════════════════════════════════
+let session = { cards: [], index: 0, flipped: false };
+
+function startSession(exam) {
+  const due = getDueWords(exam);
+  session = { cards: due.slice(0, 20), index: 0, flipped: false };
+  if (!session.cards.length) {
+    // No due cards: show all from box 1, or all words
+    const all = WORDS[exam].map((w, i) => ({ word: w, key: `${exam}_${i}`, ...state.progress[`${exam}_${i}`] }));
+    session.cards = all.filter(w => w.box === 1).slice(0, 10);
+    if (!session.cards.length) session.cards = all.slice(0, 10);
+  }
+  renderStudy();
+}
+
+function renderStudy() {
+  renderBoxes();
+  renderCard();
+  renderProgressBar();
+}
+
+function renderBoxes() {
+  const exam = state.currentExam;
+  const counts = [0,0,0,0,0,0]; // index = box 1-5
+  WORDS[exam].forEach((_, i) => {
+    const p = state.progress[`${exam}_${i}`];
+    counts[p.box] = (counts[p.box] || 0) + 1;
+  });
+  const names = ['New', 'Learning', 'Reviewing', 'Almost', 'Mastered'];
+  const row = document.getElementById('boxes-row');
+  row.innerHTML = Array.from({length:5}, (_,i) => {
+    const box = i+1;
+    const isActive = session.cards[session.index] && session.cards[session.index].box === box;
+    return `<div class="lbox${isActive?' active':''}">
+      <div class="lbox-label">BOX ${box}</div>
+      <div class="lbox-count">${counts[box]||0}</div>
+      <div class="lbox-name">${names[i]}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderProgressBar() {
+  const total = session.cards.length;
+  const done = session.index;
+  const pct = total ? (done/total)*100 : 0;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-label').textContent =
+    total ? `Card ${Math.min(done+1, total)} of ${total} · ${Math.round(pct)}% done` : '';
+}
+
+function renderCard() {
+  const area = document.getElementById('card-area');
+  const cards = session.cards;
+
+  if (!cards.length || session.index >= cards.length) {
+    area.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">🎉</div>
+      <h2>Session complete!</h2>
+      <p>You've reviewed all due cards for today. Come back tomorrow for your next session.</p>
+      <button class="btn btn-primary" onclick="startSession(state.currentExam)">Study more</button>
+    </div>`;
+    return;
+  }
+
+  const item = cards[session.index];
+  const w = item.word;
+  const examLabel = state.currentExam.toUpperCase();
+  const boxColors = ['','#1d4ed8','#4338ca','#7c3aed','#be185d','#059669'];
+
+  area.innerHTML = `
+    <div class="card-arena">
+      <div class="flash-card" id="flash-card" onclick="flipCard()">
+        <div class="card-face front">
+          <span class="card-exam-badge">${examLabel}</span>
+          <span class="card-box-badge" style="color:${boxColors[item.box]}">Box ${item.box}</span>
+          <div class="card-word">${w.word}</div>
+          <div class="card-pos">${w.pos}</div>
+          <div class="card-phonetic">${w.phonetic}</div>
+          <div class="card-tap-hint">👆 Tap to reveal meaning</div>
+        </div>
+        <div class="card-face back">
+          <span class="card-exam-badge">${examLabel}</span>
+          <span class="card-box-badge" style="color:${boxColors[item.box]}">Box ${item.box}</span>
+          <div class="card-word" style="font-size:28px">${w.word}</div>
+          <div class="card-def">${w.def}</div>
+          <div class="card-example">"${w.example}"</div>
+          <div class="card-mnemonic">💡 ${w.mnemonic}</div>
+        </div>
+      </div>
+    </div>
+    <div class="answer-row" id="answer-row" style="opacity:0;pointer-events:none;transition:opacity .3s">
+      <button class="answer-btn btn-wrong" onclick="handleAnswer(false)">✗ Didn't know it</button>
+      <button class="answer-btn btn-correct" onclick="handleAnswer(true)">✓ Got it!</button>
+    </div>
+  `;
+  session.flipped = false;
+}
+
+function flipCard() {
+  const card = document.getElementById('flash-card');
+  const row = document.getElementById('answer-row');
+  if (!session.flipped) {
+    card.classList.add('flipped');
+    session.flipped = true;
+    setTimeout(() => { row.style.opacity = '1'; row.style.pointerEvents = ''; }, 300);
+  }
+}
+
+function handleAnswer(correct) {
+  const item = session.cards[session.index];
+  answerCard(item.key, correct);
+  showToast(correct ? '✓ Moving up a box!' : '✗ Back to Box 1 — you\'ll see it again soon');
+  session.index++;
+  session.flipped = false;
+  renderStudy();
+}
+
+// ═══════════════════════════════════════════════════════
+//  PROGRESS VIEW
+// ═══════════════════════════════════════════════════════
+function renderProgress() {
+  // Stats
+  let totalWords = 0, mastered = 0, totalCorrect = 0, totalWrong = 0;
+  Object.values(state.progress).forEach(p => {
+    totalWords++;
+    if (p.box === 5) mastered++;
+    totalCorrect += p.correct;
+    totalWrong += p.wrong;
+  });
+  const accuracy = (totalCorrect + totalWrong) > 0
+    ? Math.round(totalCorrect / (totalCorrect + totalWrong) * 100) : 0;
+
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-card"><div class="stat-label">WORDS MASTERED</div><div class="stat-val" style="color:var(--green)">${mastered}</div><div class="stat-sub">of ${totalWords} total</div></div>
+    <div class="stat-card"><div class="stat-label">ACCURACY</div><div class="stat-val">${accuracy}%</div><div class="stat-sub">${totalCorrect} correct</div></div>
+    <div class="stat-card"><div class="stat-label">TOTAL REVIEWS</div><div class="stat-val">${totalCorrect+totalWrong}</div><div class="stat-sub">all time</div></div>
+    <div class="stat-card"><div class="stat-label">LEARNING</div><div class="stat-val" style="color:var(--accent)">${totalWords-mastered}</div><div class="stat-sub">still in progress</div></div>
+  `;
+  renderWordList();
+}
+
+function renderWordList() {
+  const filterExam = document.getElementById('filter-exam').value;
+  const boxColors = {1:'#1d4ed8',2:'#4338ca',3:'#7c3aed',4:'#be185d',5:'#059669'};
+  const boxBg = {1:'#dbeafe',2:'#e0e7ff',3:'#f3e8ff',4:'#fce7f3',5:'#d1fae5'};
+  const boxNames = {1:'Box 1',2:'Box 2',3:'Box 3',4:'Box 4',5:'Mastered'};
+
+  let rows = '';
+  Object.keys(WORDS).forEach(exam => {
+    if (filterExam && exam !== filterExam) return;
+    WORDS[exam].forEach((w, i) => {
+      const p = state.progress[`${exam}_${i}`];
+      rows += `<div class="word-row">
+        <span class="word-row-word">${w.word}</span>
+        <span class="word-row-def">${w.def.slice(0,60)}${w.def.length>60?'...':''}</span>
+        <span class="word-row-box" style="background:${boxBg[p.box]};color:${boxColors[p.box]}">${boxNames[p.box]}</span>
+        <span style="font-size:11px;color:var(--ink3);white-space:nowrap">${exam.toUpperCase()}</span>
+      </div>`;
+    });
+  });
+  document.getElementById('word-list').innerHTML = rows || '<p style="color:var(--ink3);text-align:center;padding:32px">No words found.</p>';
+}
+
+// ═══════════════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════════════
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+
+  if (name === 'study') {
+    document.getElementById('exam-select').value = state.currentExam;
+    startSession(state.currentExam);
+  }
+  if (name === 'progress') renderProgress();
+}
+
+function changeExam() {
+  state.currentExam = document.getElementById('exam-select').value;
+  saveState();
+  startSession(state.currentExam);
+}
+
+// ═══════════════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════════════
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ═══════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  const active = document.getElementById('view-study');
+  if (!active.classList.contains('active')) return;
+  if (e.code === 'Space') { e.preventDefault(); flipCard(); }
+  if (e.code === 'ArrowLeft') handleAnswer(false);
+  if (e.code === 'ArrowRight') handleAnswer(true);
+});
+</script>
+</body>
+</html>
